@@ -1,0 +1,17 @@
+{
+  "name": "trusted-web-news",
+  "description": "Trusted AI and web news aggregation for GitHub Copilot CLI.",
+  "version": "0.1.0",
+  "keywords": [
+    "news",
+    "ai",
+    "web",
+    "traditional-chinese",
+    "mcp"
+  ],
+  "agents": "agents/",
+  "skills": [
+    "skills/"
+  ],
+  "mcpServers": ".mcp.json"
+}

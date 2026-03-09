@@ -1,0 +1,18 @@
+{
+  "name": "copilot-web-news-plugins",
+  "owner": {
+    "name": "cmwen"
+  },
+  "metadata": {
+    "description": "Trusted AI and web news aggregation plugins for GitHub Copilot CLI.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "trusted-web-news",
+      "description": "Aggregates trusted AI and web news and returns a Traditional Chinese briefing with source links.",
+      "version": "0.1.0",
+      "source": "plugins/trusted-web-news"
+    }
+  ]
+}
