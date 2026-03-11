@@ -1,11 +1,11 @@
 {
-  "name": "copilot-web-news-plugins",
+  "name": "min-copilot-plugins",
   "owner": {
     "name": "cmwen"
   },
   "metadata": {
     "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, and life automation starters.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
