@@ -1,0 +1,16 @@
+{
+  "name": "knowledge-space-starter",
+  "description": "Reusable software-team agents and skills for discovery, architecture, delivery handoffs, and conversation-to-skill capture in GitHub Copilot CLI.",
+  "version": "0.1.0",
+  "keywords": [
+    "knowledge-space",
+    "software-team",
+    "product",
+    "architecture",
+    "agents"
+  ],
+  "agents": "agents/",
+  "skills": [
+    "skills/"
+  ]
+}

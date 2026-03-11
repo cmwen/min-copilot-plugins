@@ -1,0 +1,16 @@
+{
+  "name": "life-automation-starter",
+  "description": "Reusable personal automation agent and skills for weather, email, calendar, and API-backed workflows in GitHub Copilot CLI.",
+  "version": "0.1.0",
+  "keywords": [
+    "automation",
+    "weather",
+    "email",
+    "calendar",
+    "api"
+  ],
+  "agents": "agents/",
+  "skills": [
+    "skills/"
+  ]
+}

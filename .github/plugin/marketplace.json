@@ -4,8 +4,8 @@
     "name": "cmwen"
   },
   "metadata": {
-    "description": "Trusted AI and web news aggregation plugins for GitHub Copilot CLI.",
-    "version": "0.1.0"
+    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, and life automation starters.",
+    "version": "0.2.0"
   },
   "plugins": [
     {
@@ -13,6 +13,18 @@
       "description": "Aggregates trusted AI and web news and returns a Traditional Chinese briefing with source links.",
       "version": "0.1.0",
       "source": "plugins/trusted-web-news"
+    },
+    {
+      "name": "knowledge-space-starter",
+      "description": "Provides reusable software-team agents and skills for discovery, architecture decisions, delivery handoffs, and conversation-to-skill capture.",
+      "version": "0.1.0",
+      "source": "plugins/knowledge-space-starter"
+    },
+    {
+      "name": "life-automation-starter",
+      "description": "Provides a reusable life-automation agent plus skills for weather, email, calendar, and API-backed workflows.",
+      "version": "0.1.0",
+      "source": "plugins/life-automation-starter"
     }
   ]
 }
