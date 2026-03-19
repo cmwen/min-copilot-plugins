@@ -4,8 +4,6 @@ This document defines the JSON spec structure accepted by `keepass_safe_ops.py` 
 
 > **Delete operations are not defined here and are not supported.** Any spec containing `delete`, `remove`, `purge`, `trash`, or `recycle_bin` keys will be rejected by the script.
 
----
-
 ## open-database
 
 Opens the database, validates access, and creates a local session metadata file. The password must **never** appear in the spec.
@@ -188,8 +186,64 @@ The script explicitly rejects specs or environment conditions that match any of 
 
 - Any key named `delete`, `remove`, `purge`, `trash`, `recycle`, or `recycle_bin`.
 - Any `entity_type` value other than `"entry"` or `"group"`.
-- Any `subcommand` not in the allowlist (`open-database`, `close-database`, `create-entity`, `move-entity`, `edit-entity`).
+- Any `subcommand` not in the allowlist (`open-database`, `close-database`, `create-entity`, `move-entity`, `edit-entity`, `search-entries`, `show-entity`, `forget`).
 - Any write-action spec that omits `confirmed: true`.
 - Missing required fields for the chosen subcommand.
 - A `database_path` or `source_path` that contains traversal sequences (`..`).
 - Any target path segment or group name containing delete-like terms such as `trash`, `recycle bin`, `purge`, or `remove`.
+
+---
+
+## search-entries
+
+Searches for entries by title or username within the database or a specific group. This is a read-only operation.
+
+```json
+{
+  "session_name": "work-vault",
+  "search_term": "gmail",
+  "group_path": ["Social"]
+}
+```
+
+| Field         | Required | Description                                              |
+|---------------|----------|----------------------------------------------------------|
+| `session_name` | Yes      | Active session name.                                     |
+| `search_term` | No       | Text to search for in title or username (case-insensitive). If omitted, lists all entries in the scope. |
+| `group_path`  | No       | If provided, search only within this group. Omit to search all entries. |
+
+---
+
+## show-entity
+
+Displays details of a specific entry or group. This is a read-only operation.
+
+```json
+{
+  "session_name": "work-vault",
+  "entity_type": "entry",
+  "source_path": ["Work", "GitHub"]
+}
+```
+
+| Field          | Required | Description                                              |
+|----------------|----------|----------------------------------------------------------|
+| `session_name` | Yes      | Active session name.                                     |
+| `entity_type`  | Yes      | `"entry"` or `"group"`.                                  |
+| `source_path`  | Yes      | Full path to the entity to display.                      |
+
+---
+
+## forget
+
+Alias for `close-database`. Closes the database session without requiring explicit database operations.
+
+```json
+{
+  "session_name": "work-vault"
+}
+```
+
+| Field          | Required | Description                          |
+|----------------|----------|--------------------------------------|
+| `session_name` | Yes      | Name of the session to forget/close. |

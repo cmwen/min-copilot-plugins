@@ -468,5 +468,118 @@ class TestSessionPath(unittest.TestCase):
                     keepass_safe_ops._load_session("no-such-session")
 
 
+# ---------------------------------------------------------------------------
+# search-entries operation
+# ---------------------------------------------------------------------------
+
+class TestSearchEntries(unittest.TestCase):
+
+    def test_search_entries_requires_session_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(tmp, {})
+            rc = keepass_safe_ops.main(["search-entries", "--spec-file", path])
+            self.assertNotEqual(rc, 0)
+
+    def test_search_entries_does_not_require_confirmation(self):
+        """search-entries is read-only and should not require confirmed: true."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(tmp, {"session_name": "s"})
+            with mock.patch.object(
+                keepass_safe_ops,
+                "_open_db_from_session",
+                return_value=(mock.MagicMock(), "/tmp/db.kdbx"),
+            ):
+                rc = keepass_safe_ops.main(["search-entries", "--spec-file", path])
+                self.assertEqual(rc, 0)
+
+    def test_search_entries_with_invalid_group_path_type(self):
+        """group_path must be a list."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(
+                tmp,
+                {"session_name": "s", "group_path": "NotAList"}
+            )
+            rc = keepass_safe_ops.main(["search-entries", "--spec-file", path])
+            self.assertNotEqual(rc, 0)
+
+
+# ---------------------------------------------------------------------------
+# show-entity operation
+# ---------------------------------------------------------------------------
+
+class TestShowEntity(unittest.TestCase):
+
+    def test_show_entity_requires_session_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(tmp, {"entity_type": "entry"})
+            rc = keepass_safe_ops.main(["show-entity", "--spec-file", path])
+            self.assertNotEqual(rc, 0)
+
+    def test_show_entity_requires_entity_type(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(tmp, {"session_name": "s"})
+            rc = keepass_safe_ops.main(["show-entity", "--spec-file", path])
+            self.assertNotEqual(rc, 0)
+
+    def test_show_entity_requires_source_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(
+                tmp, {"session_name": "s", "entity_type": "entry"}
+            )
+            rc = keepass_safe_ops.main(["show-entity", "--spec-file", path])
+            self.assertNotEqual(rc, 0)
+
+    def test_show_entity_does_not_require_confirmation(self):
+        """show-entity is read-only and should not require confirmed: true."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(
+                tmp,
+                {
+                    "session_name": "s",
+                    "entity_type": "entry",
+                    "source_path": ["Work", "GitHub"],
+                }
+            )
+            with mock.patch.object(
+                keepass_safe_ops,
+                "_open_db_from_session",
+                return_value=(mock.MagicMock(), "/tmp/db.kdbx"),
+            ):
+                rc = keepass_safe_ops.main(["show-entity", "--spec-file", path])
+                self.assertEqual(rc, 0)
+
+
+# ---------------------------------------------------------------------------
+# forget operation (alias for close-database)
+# ---------------------------------------------------------------------------
+
+class TestForgetOperation(unittest.TestCase):
+
+    def test_forget_is_an_alias_for_close_database(self):
+        """forget should work exactly like close-database."""
+        with tempfile.TemporaryDirectory() as tmp:
+            session_path = keepass_safe_ops._session_path("test-session")
+            session_path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+            session_path.write_text('{"session_name": "test-session"}')
+
+            path = _write_spec(tmp, {"session_name": "test-session"})
+            # Verify session exists before forget
+            self.assertTrue(session_path.is_file())
+
+            # Run forget
+            rc = keepass_safe_ops.main(["forget", "--spec-file", path])
+            self.assertEqual(rc, 0)
+
+            # Verify session is deleted (same as close-database)
+            self.assertFalse(session_path.is_file())
+
+    def test_forget_handles_missing_session_gracefully(self):
+        """forget on missing session should not error (like close-database)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = _write_spec(tmp, {"session_name": "nonexistent"})
+            rc = keepass_safe_ops.main(["forget", "--spec-file", path])
+            self.assertEqual(rc, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

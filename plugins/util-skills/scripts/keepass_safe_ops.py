@@ -7,6 +7,9 @@ Allowlisted subcommands:
   create-entity    Create a new entry or group (with backup).
   move-entity      Move an existing entry or group (with backup).
   edit-entity      Edit fields of an existing entry or group (with backup).
+  search-entries   Search for entries by title or username (read-only).
+  show-entity      Display entry or group details (read-only).
+  forget           Alias for close-database.
 
 Delete-like operations (delete, remove, purge, trash, recycle) are explicitly
 rejected by construction.  The script errors rather than silently swallowing
@@ -47,6 +50,9 @@ ALLOWLISTED_SUBCOMMANDS = {
     "create-entity",
     "move-entity",
     "edit-entity",
+    "search-entries",
+    "show-entity",
+    "forget",
 }
 
 FORBIDDEN_KEYS = frozenset(
@@ -537,6 +543,81 @@ def cmd_edit_entity(spec: dict[str, Any]) -> None:
         )
 
 
+def cmd_search_entries(spec: dict[str, Any]) -> None:
+    _require(spec, "session_name")
+    session_name: str = spec["session_name"]
+    search_term: str | None = spec.get("search_term")
+    group_path: list[str] | None = spec.get("group_path")
+
+    kp, _ = _open_db_from_session(session_name)
+
+    results = []
+
+    if group_path is not None:
+        if not isinstance(group_path, list):
+            raise ValueError("group_path must be a list of path segments.")
+        _check_path_segments(group_path, "group_path")
+        parent_group = _resolve_group(kp, group_path)
+        entries = parent_group.entries
+    else:
+        entries = kp.entries
+
+    for entry in entries:
+        if search_term:
+            search_lower = search_term.lower()
+            match = (
+                search_lower in (entry.title or "").lower()
+                or search_lower in (entry.username or "").lower()
+            )
+            if not match:
+                continue
+        results.append(entry)
+
+    if not results:
+        print(f"No entries found matching query.")
+        return
+
+    print(f"Found {len(results)} entry(ies):")
+    for i, entry in enumerate(results, 1):
+        print(f"  {i}. Title: {entry.title}")
+        if entry.username:
+            print(f"     Username: {entry.username}")
+        if entry.url:
+            print(f"     URL: {entry.url}")
+
+
+def cmd_show_entity(spec: dict[str, Any]) -> None:
+    _require(spec, "session_name", "entity_type", "source_path")
+    session_name: str = spec["session_name"]
+    entity_type: str = spec["entity_type"]
+    source_path: list[str] = spec["source_path"]
+    _check_entity_type(entity_type)
+
+    kp, _ = _open_db_from_session(session_name)
+
+    if entity_type == "entry":
+        entry = kp.find_entries(path=source_path, first=True)
+        if entry is None:
+            raise ValueError(f"Entry not found at path: {source_path}")
+        print(f"Entry: {entry.title}")
+        print(f"  Username: {entry.username or '(none)'}")
+        print(f"  URL: {entry.url or '(none)'}")
+        print(f"  Notes: {entry.notes or '(none)'}")
+    else:
+        group = kp.find_groups(path=source_path, first=True)
+        if group is None:
+            raise ValueError(f"Group not found at path: {source_path}")
+        print(f"Group: {group.name}")
+        print(f"  Notes: {group.notes or '(none)'}")
+        print(f"  Entries: {len(group.entries)}")
+        print(f"  Subgroups: {len(group.subgroups)}")
+
+
+def cmd_forget(spec: dict[str, Any]) -> None:
+    """Alias for cmd_close_database for better UX."""
+    cmd_close_database(spec)
+
+
 # ---------------------------------------------------------------------------
 # Dispatch table
 # ---------------------------------------------------------------------------
@@ -547,6 +628,9 @@ SUBCOMMAND_HANDLERS = {
     "create-entity": cmd_create_entity,
     "move-entity": cmd_move_entity,
     "edit-entity": cmd_edit_entity,
+    "search-entries": cmd_search_entries,
+    "show-entity": cmd_show_entity,
+    "forget": cmd_forget,
 }
 
 

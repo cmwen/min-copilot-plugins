@@ -5,9 +5,9 @@ description: Perform safe, auditable open, close, create, move, and edit operati
 
 # Purpose
 
-Use this skill when the user wants to inspect or modify entries and groups inside a KeePass `.kdbx` database file. It delegates all database access to `plugins/util-skills/scripts/keepass_safe_ops.py`, which enforces session management, per-database locking, timestamped backups, and an explicit allowlist of safe subcommands.
+Use this skill when the user wants to inspect, search, or modify entries and groups inside a KeePass `.kdbx` database file. It delegates all database access to `plugins/util-skills/scripts/keepass_safe_ops.py`, which enforces session management, per-database locking, timestamped backups, and an explicit allowlist of safe subcommands.
 
-**Delete-like operations are unsupported and must be refused.** Do not attempt to remove, delete, trash, purge, or move entries or groups to a recycle bin. If the user requests any such action, decline clearly and explain that only create, move, and edit are available.
+**Delete-like operations are unsupported and must be refused.** Do not attempt to remove, delete, trash, purge, or move entries or groups to a recycle bin. If the user requests any such action, decline clearly and explain that only create, move, edit, search, and show are available.
 
 # Requirements
 
@@ -66,6 +66,9 @@ Delete the temporary spec file after the script completes, regardless of success
 | `create-entity`  | entry, group   | **Yes**               |
 | `move-entity`    | entry, group   | **Yes**               |
 | `edit-entity`    | entry, group   | **Yes**               |
+| `search-entries` | entry          | No (read-only)        |
+| `show-entity`    | entry, group   | No (read-only)        |
+| `forget`         | n/a            | No (alias for close)  |
 
 # Safety rules
 
