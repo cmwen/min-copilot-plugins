@@ -10,12 +10,13 @@ It follows the GitHub Docs guidance for:
 - custom agents
 - MCP server configuration
 
-It currently publishes four plugins:
+It currently publishes five plugins:
 
 - `trusted-web-news`
 - `knowledge-space-starter`
 - `life-automation-starter`
 - `plugin-authoring-starter`
+- `util-skills`
 
 ## Repository structure
 
@@ -38,11 +39,17 @@ min-copilot-plugins/
     │   ├── plugin.json
     │   ├── agents/
     │   └── skills/
-    └── plugin-authoring-starter/
+    ├── plugin-authoring-starter/
+    │   ├── plugin.json
+    │   ├── .mcp.json
+    │   ├── agents/
+    │   └── skills/
+    └── util-skills/
         ├── plugin.json
-        ├── .mcp.json
-        ├── agents/
-        └── skills/
+        ├── README.md
+        ├── skills/
+        ├── scripts/
+        └── tests/
 ```
 
 ## How the marketplace works
@@ -79,6 +86,7 @@ copilot plugin install trusted-web-news@min-copilot-plugins
 copilot plugin install knowledge-space-starter@min-copilot-plugins
 copilot plugin install life-automation-starter@min-copilot-plugins
 copilot plugin install plugin-authoring-starter@min-copilot-plugins
+copilot plugin install util-skills@min-copilot-plugins
 ```
 
 You can also install the plugin directly from the repository path:
@@ -88,6 +96,7 @@ copilot plugin install cmwen/min-copilot-plugins:plugins/trusted-web-news
 copilot plugin install cmwen/min-copilot-plugins:plugins/knowledge-space-starter
 copilot plugin install cmwen/min-copilot-plugins:plugins/life-automation-starter
 copilot plugin install cmwen/min-copilot-plugins:plugins/plugin-authoring-starter
+copilot plugin install cmwen/min-copilot-plugins:plugins/util-skills
 ```
 
 ## Available plugins
@@ -101,3 +110,5 @@ The default source set emphasizes official blogs and well-established engineerin
 `life-automation-starter` is a reusable personal automation starter plugin. It includes a coordination agent and skills for weather lookups, inbox triage, calendar operations, and planning additional API-driven automations.
 
 `plugin-authoring-starter` is a reusable plugin-builder starter. It includes plugin-authoring agents plus reusable skills for scaffolding new Copilot CLI plugins, wiring marketplace metadata, and adding MCP-backed agent and skill setups.
+
+`util-skills` is a utility skills-only plugin. It ships `keepass-entity-ops`, a skill for performing safe, auditable open, close, create, move, and edit operations on KeePass `.kdbx` databases via a local Python helper, plus `agent-config-bridge`, a safety-first bridge skill for scanning repositories and planning or applying Copilot/OpenCode agent, skill, command, instruction, and local-MCP translations with explicit symlink and wrapper actions.

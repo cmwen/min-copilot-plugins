@@ -1,0 +1,19 @@
+{
+  "name": "util-skills",
+  "description": "Utility skills for safe, auditable local-file and repository-bridge workflows, including KeePass operations and Copilot/OpenCode agent-config translation planning.",
+  "version": "0.2.0",
+  "keywords": [
+    "keepass",
+    "secrets",
+    "password-manager",
+    "utility",
+    "file-ops",
+    "copilot",
+    "opencode",
+    "bridge",
+    "agents"
+  ],
+  "skills": [
+    "skills/"
+  ]
+}

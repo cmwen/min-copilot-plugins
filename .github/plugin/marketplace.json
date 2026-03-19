@@ -4,8 +4,8 @@
     "name": "cmwen"
   },
   "metadata": {
-    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, life automation starters, and plugin authoring starters.",
-    "version": "0.4.0"
+    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, life automation starters, plugin authoring starters, and utility skills for safe local-file operations.",
+    "version": "0.5.0"
   },
   "plugins": [
     {
@@ -31,6 +31,12 @@
       "description": "Provides reusable agents and skills for creating Copilot CLI plugins with manifests, marketplace wiring, agents, skills, and MCP setup.",
       "version": "0.1.0",
       "source": "plugins/plugin-authoring-starter"
+    },
+    {
+      "name": "util-skills",
+      "description": "Provides utility skills for safe, auditable KeePass operations and for bridging Copilot/OpenCode agent configuration with transparent symlink and wrapper plans.",
+      "version": "0.2.0",
+      "source": "plugins/util-skills"
     }
   ]
 }
