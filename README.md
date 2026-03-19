@@ -47,6 +47,7 @@ min-copilot-plugins/
     └── util-skills/
         ├── plugin.json
         ├── README.md
+        ├── agents/
         ├── skills/
         ├── scripts/
         └── tests/
@@ -111,4 +112,4 @@ The default source set emphasizes official blogs and well-established engineerin
 
 `plugin-authoring-starter` is a reusable plugin-builder starter. It includes plugin-authoring agents plus reusable skills for scaffolding new Copilot CLI plugins, wiring marketplace metadata, and adding MCP-backed agent and skill setups.
 
-`util-skills` is a utility skills-only plugin. It ships `keepass-entity-ops`, a skill for performing safe, auditable open, close, create, move, and edit operations on KeePass `.kdbx` databases via a local Python helper, plus `agent-config-bridge`, a safety-first bridge skill for scanning repositories and planning or applying Copilot/OpenCode agent, skill, command, instruction, and local-MCP translations with explicit symlink and wrapper actions.
+`util-skills` is a utility plugin for local-safe workflows. It now ships the `util-tmux-cli-orchestrator` custom agent plus `util-tmux-session-admin` and `util-delegated-cli-task-ops` for tmux-managed delegated coding sessions, alongside `keepass-entity-ops` for safe KeePass `.kdbx` operations and `agent-config-bridge` for safety-first Copilot/OpenCode configuration translation with explicit symlink and wrapper actions.

@@ -1,6 +1,6 @@
 # util-skills
 
-Utility skills for GitHub Copilot CLI. Provides focused, safety-first skills for operations on local data files and repository bridge workflows.
+Utility agents and skills for GitHub Copilot CLI. This plugin provides focused, safety-first building blocks for local data operations, repository bridge workflows, and tmux-managed delegated coding sessions.
 
 ## Files
 
@@ -8,22 +8,85 @@ Utility skills for GitHub Copilot CLI. Provides focused, safety-first skills for
 plugins/util-skills/
 ├── plugin.json
 ├── README.md
+├── agents/
+│   └── util-tmux-cli-orchestrator.agent.md
 ├── skills/
 │   ├── agent-config-bridge/
 │   │   ├── SKILL.md
 │   │   └── translation-contract.md
-│   └── keepass-entity-ops/
+│   ├── keepass-entity-ops/
+│   │   ├── SKILL.md
+│   │   └── operation-contract.md
+│   ├── util-delegated-cli-task-ops/
+│   │   ├── SKILL.md
+│   │   └── task-contract.md
+│   └── util-tmux-session-admin/
 │       ├── SKILL.md
-│       └── operation-contract.md
+│       └── session-contract.md
 ├── scripts/
 │   ├── agent_config_bridge.py
-│   └── keepass_safe_ops.py
+│   ├── keepass_safe_ops.py
+│   ├── tmux_cli_orchestrator.py
+│   └── tmux_cli_worker.py
 └── tests/
     ├── test_agent_config_bridge.py
-    └── test_keepass_safe_ops.py
+    ├── test_keepass_safe_ops.py
+    ├── test_tmux_cli_orchestrator.py
+    └── test_tmux_cli_worker.py
 ```
 
+## Included agent
+
+### `util-tmux-cli-orchestrator`
+
+Coordinate long-running repo work through managed tmux worker sessions instead of executing the repository task directly in the current Copilot conversation.
+
+The agent remembers each repo's normalized path and purpose, uses tmux worker windows and panes to keep delegated sessions visible, and routes repo work through the tmux-oriented skills below.
+
 ## Included skills
+
+### `util-tmux-session-admin`
+
+Register repo memory and manage tmux-backed worker windows for delegated coding sessions.
+
+Supported helper subcommands:
+
+| Subcommand | Description |
+|------------|-------------|
+| `repo-register` | Store or update repo memory, including purpose, normalized path, alias, and default delegated CLI. |
+| `repo-list` | List registered repos and their task/session counts. |
+| `repo-show` | Show one repo with its current task/session state. |
+| `session-create` | Create a worker window with runner and status panes inside the repo tmux session. |
+| `session-list` | List worker sessions for a repo. |
+| `session-attach` | Return the tmux attach command for the repo session. |
+| `status-show` | Show the current repo/session/task summary. |
+
+The helper persists orchestration state under `~/.copilot-util-skills/tmux-orchestrator` so repo memory, session metadata, queue state, logs, and prompt files stay outside the repository.
+
+See [`skills/util-tmux-session-admin/SKILL.md`](skills/util-tmux-session-admin/SKILL.md) and [`skills/util-tmux-session-admin/session-contract.md`](skills/util-tmux-session-admin/session-contract.md).
+
+### `util-delegated-cli-task-ops`
+
+Queue and run delegated coding tasks inside managed tmux workers using supported external CLIs.
+
+Supported helper subcommands:
+
+| Subcommand | Description |
+|------------|-------------|
+| `task-enqueue` | Queue a task and start it immediately when the repo/session state allows. |
+| `task-start-next` | Start any queued task that is now eligible to run. |
+| `task-list` | List delegated tasks for a repo. |
+| `task-show` | Show one delegated task in detail. |
+| `task-cancel` | Cancel a queued task before it starts. |
+
+The scheduler is conservative by default: only one `queue` task may run on a repo's main checkout at a time, while `worktree` tasks can run concurrently when the repo is a git repository and an idle worker session exists.
+
+Currently validated delegated adapters:
+
+- `copilot`
+- `opencode`
+
+See [`skills/util-delegated-cli-task-ops/SKILL.md`](skills/util-delegated-cli-task-ops/SKILL.md) and [`skills/util-delegated-cli-task-ops/task-contract.md`](skills/util-delegated-cli-task-ops/task-contract.md).
 
 ### `keepass-entity-ops`
 
@@ -68,7 +131,13 @@ See [`skills/agent-config-bridge/SKILL.md`](skills/agent-config-bridge/SKILL.md)
 pip install pykeepass
 ```
 
-The `agent_config_bridge.py` helper is standard-library-only and does not require additional Python packages.
+The `agent_config_bridge.py`, `tmux_cli_orchestrator.py`, and `tmux_cli_worker.py` helpers are standard-library-only and do not require additional Python packages.
+
+Delegated tmux sessions also require:
+
+- `tmux`
+- at least one supported delegated CLI adapter (`copilot` or `opencode`)
+- `git` when using worktree execution mode
 
 ### Run the tests
 
@@ -77,7 +146,7 @@ cd plugins/util-skills
 python3 -m unittest discover -s tests -v
 ```
 
-All tests in `tests/test_keepass_safe_ops.py` and `tests/test_agent_config_bridge.py` use only the standard library.
+All tests in `tests/test_keepass_safe_ops.py`, `tests/test_agent_config_bridge.py`, `tests/test_tmux_cli_orchestrator.py`, and `tests/test_tmux_cli_worker.py` use only the standard library.
 
 ### Run the scripts manually
 
@@ -96,6 +165,24 @@ python3 scripts/agent_config_bridge.py plan \
   --repo-root /path/to/repo \
   --target copilot \
   --source-root .opencode
+
+# Register a repo for delegated tmux sessions
+python3 scripts/tmux_cli_orchestrator.py repo-register \
+  --repo-root /path/to/repo \
+  --purpose "Long-running app work managed through tmux" \
+  --default-cli copilot
+
+# Create a worker session
+python3 scripts/tmux_cli_orchestrator.py session-create \
+  --repo-root /path/to/repo \
+  --label backend
+
+# Queue delegated work from a prompt file
+python3 scripts/tmux_cli_orchestrator.py task-enqueue \
+  --repo-root /path/to/repo \
+  --cli opencode \
+  --prompt-file /tmp/delegated-task.md \
+  --execution-mode worktree
 ```
 
 ## Usage
@@ -112,9 +199,12 @@ Or directly:
 copilot plugin install cmwen/min-copilot-plugins:plugins/util-skills
 ```
 
-Then invoke a skill in Copilot:
+Then invoke a bundled agent or skill in Copilot:
 
 ```text
+@copilot use util-tmux-cli-orchestrator to register this repo, create a tmux worker, and queue a long-running refactor task for Copilot CLI
+@copilot /util-tmux-session-admin register this repo for delegated sessions with purpose "CLI orchestration experiments"
+@copilot /util-delegated-cli-task-ops enqueue a worktree-isolated OpenCode task from /tmp/delegated-task.md
 @copilot /keepass-entity-ops open-database for my work vault at /path/to/work.kdbx
 @copilot /keepass-entity-ops create a new entry "GitHub" in the "Dev Tools" group
 @copilot /agent-config-bridge scan this repository and plan a bridge from OpenCode to Copilot
@@ -127,6 +217,9 @@ Then invoke a skill in Copilot:
 - **Relative symlinks only.** The bridge helper creates relative symlinks for compatible files and refuses repo-escape sources or targets.
 - **No silent overwrites.** Existing non-symlink files are treated as conflicts and are not replaced automatically.
 - **Transparent translation.** Agents and command wrappers preserve provenance, and remote or otherwise unsupported MCP entries are reported as `skip` actions.
+- **Delegated tasks stay out of the repo.** Repo memory, task metadata, prompt files, logs, and worktree bookkeeping live under `~/.copilot-util-skills/tmux-orchestrator`.
+- **Queue mode is the safe default.** Only one delegated task runs on a repo's main checkout at a time unless the task is explicitly isolated with `--execution-mode worktree`.
+- **Tmux and OS notifications are visible hints, not hidden state.** The worker writes the final summary into the task log, updates tmux panes, and sends a best-effort OS notification without masking failures if notifications are unavailable.
 - **Passwords are never stored.** For KeePass operations, the master password must be supplied via `KEEPASS_PASSWORD`, and entry passwords use `KEEPASS_ENTRY_PASSWORD`.
 - **Write actions require explicit confirmation.** Copilot must show the full KeePass operation spec and ask for `yes/no` confirmation before running `create-entity`, `move-entity`, or `edit-entity`.
 - **Automatic backups.** Every KeePass write operation makes a timestamped `.backup.<timestamp>.kdbx` copy next to the original before touching the database.

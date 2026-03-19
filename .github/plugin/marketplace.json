@@ -34,8 +34,8 @@
     },
     {
       "name": "util-skills",
-      "description": "Provides utility skills for safe, auditable KeePass operations and for bridging Copilot/OpenCode agent configuration with transparent symlink and wrapper plans.",
-      "version": "0.2.0",
+      "description": "Provides utility agents and skills for safe KeePass operations, Copilot/OpenCode config bridging, and tmux-managed delegated coding sessions.",
+      "version": "0.3.0",
       "source": "plugins/util-skills"
     }
   ]

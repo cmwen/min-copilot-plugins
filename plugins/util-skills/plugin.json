@@ -1,7 +1,7 @@
 {
   "name": "util-skills",
-  "description": "Utility skills for safe, auditable local-file and repository-bridge workflows, including KeePass operations and Copilot/OpenCode agent-config translation planning.",
-  "version": "0.2.0",
+  "description": "Utility agents and skills for safe local-file workflows, config bridging, and tmux-managed delegated coding sessions.",
+  "version": "0.3.0",
   "keywords": [
     "keepass",
     "secrets",
@@ -11,8 +11,12 @@
     "copilot",
     "opencode",
     "bridge",
-    "agents"
+    "agents",
+    "tmux",
+    "queue",
+    "worktree"
   ],
+  "agents": "agents/",
   "skills": [
     "skills/"
   ]
