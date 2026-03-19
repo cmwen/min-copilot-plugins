@@ -4,8 +4,8 @@
     "name": "cmwen"
   },
   "metadata": {
-    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, and life automation starters.",
-    "version": "0.3.0"
+    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, life automation starters, and plugin authoring starters.",
+    "version": "0.4.0"
   },
   "plugins": [
     {
@@ -25,6 +25,12 @@
       "description": "Provides a reusable life-automation agent plus skills for weather, email, calendar, and API-backed workflows.",
       "version": "0.1.0",
       "source": "plugins/life-automation-starter"
+    },
+    {
+      "name": "plugin-authoring-starter",
+      "description": "Provides reusable agents and skills for creating Copilot CLI plugins with manifests, marketplace wiring, agents, skills, and MCP setup.",
+      "version": "0.1.0",
+      "source": "plugins/plugin-authoring-starter"
     }
   ]
 }

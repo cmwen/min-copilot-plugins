@@ -1,0 +1,18 @@
+{
+  "name": "plugin-authoring-starter",
+  "description": "Reusable agents and skills for creating GitHub Copilot CLI plugins with manifests, marketplace wiring, custom agents, skills, and MCP setup.",
+  "version": "0.1.0",
+  "keywords": [
+    "plugin",
+    "copilot-cli",
+    "marketplace",
+    "agents",
+    "skills",
+    "mcp"
+  ],
+  "agents": "agents/",
+  "skills": [
+    "skills/"
+  ],
+  "mcpServers": ".mcp.json"
+}
