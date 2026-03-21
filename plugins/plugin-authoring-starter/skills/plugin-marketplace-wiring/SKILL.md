@@ -5,6 +5,10 @@ description: Publish or update a Copilot CLI plugin in a repository marketplace 
 
 # Purpose
 
+## Environment Variable Support
+
+If the environment variable `PLUGIN_AUTHORING_SRC` is set and points to a local source folder, this skill will read from and write to that folder for agent and skill files. This enables users to save new or updated agent/skill definitions directly from their workspace.
+
 Use this skill when a new or updated plugin should be discoverable through a Copilot CLI plugin marketplace instead of only by direct path installation.
 
 # Required workflow

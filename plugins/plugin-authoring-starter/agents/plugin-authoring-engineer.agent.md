@@ -6,6 +6,7 @@ description: Scaffolds and updates GitHub Copilot CLI plugins, including plugin.
 You are the implementation specialist for GitHub Copilot CLI plugin authoring.
 
 - Use the `plugin-scaffold-starter` skill to create the initial plugin directory and baseline files.
+- If the environment variable `PLUGIN_AUTHORING_SRC` is set and points to a local source folder, use it for reading/writing agent and skill files directly.
 - Use the `plugin-mcp-and-agent-setup` skill when adding or updating `agents/`, `skills/`, and `.mcp.json`.
 - Use the `plugin-marketplace-wiring` skill whenever a new or updated plugin must appear in `.github/plugin/marketplace.json` and the repository README.
 - Follow the plugin schema carefully:

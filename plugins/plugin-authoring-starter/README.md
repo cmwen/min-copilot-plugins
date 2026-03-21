@@ -41,6 +41,10 @@ plugins/plugin-authoring-starter/
 
 ## Local development
 
+### Environment Variable Support
+
+If you set the environment variable `PLUGIN_AUTHORING_SRC` to a local source folder, the authoring agents and skills will read from and write to that folder for agent and skill files. This allows you to save new or updated agent/skill definitions directly from your workspace, making it easy to persist LLM-generated solutions as reusable skills or agents.
+
 Install the plugin from this repository checkout:
 
 ```sh
