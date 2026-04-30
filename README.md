@@ -1,6 +1,6 @@
 # Copilot Workflow Plugins
 
-This repository is a GitHub Copilot CLI plugin marketplace for reusable workflow plugins.
+This repository is a GitHub Copilot CLI plugin marketplace for reusable workflow plugins, including Logseq vault indexing and update helpers.
 
 It follows the GitHub Docs guidance for:
 
@@ -10,13 +10,14 @@ It follows the GitHub Docs guidance for:
 - custom agents
 - MCP server configuration
 
-It currently publishes five plugins:
+It currently publishes six plugins:
 
 - `trusted-web-news`
 - `knowledge-space-starter`
 - `life-automation-starter`
 - `plugin-authoring-starter`
 - `util-skills`
+- `logseq-vault-skills`
 
 ## Repository structure
 
@@ -44,7 +45,14 @@ min-copilot-plugins/
     │   ├── .mcp.json
     │   ├── agents/
     │   └── skills/
-    └── util-skills/
+    ├── util-skills/
+    │   ├── plugin.json
+    │   ├── README.md
+    │   ├── agents/
+    │   ├── skills/
+    │   ├── scripts/
+    │   └── tests/
+    └── logseq-vault-skills/
         ├── plugin.json
         ├── README.md
         ├── agents/
@@ -88,6 +96,7 @@ copilot plugin install knowledge-space-starter@min-copilot-plugins
 copilot plugin install life-automation-starter@min-copilot-plugins
 copilot plugin install plugin-authoring-starter@min-copilot-plugins
 copilot plugin install util-skills@min-copilot-plugins
+copilot plugin install logseq-vault-skills@min-copilot-plugins
 ```
 
 You can also install the plugin directly from the repository path:
@@ -98,6 +107,7 @@ copilot plugin install cmwen/min-copilot-plugins:plugins/knowledge-space-starter
 copilot plugin install cmwen/min-copilot-plugins:plugins/life-automation-starter
 copilot plugin install cmwen/min-copilot-plugins:plugins/plugin-authoring-starter
 copilot plugin install cmwen/min-copilot-plugins:plugins/util-skills
+copilot plugin install cmwen/min-copilot-plugins:plugins/logseq-vault-skills
 ```
 
 ## Available plugins
@@ -113,3 +123,5 @@ The default source set emphasizes official blogs and well-established engineerin
 `plugin-authoring-starter` is a reusable plugin-builder starter. It includes plugin-authoring agents plus reusable skills for scaffolding new Copilot CLI plugins, wiring marketplace metadata, and adding MCP-backed agent and skill setups.
 
 `util-skills` is a utility plugin for local-safe workflows. It now ships the `util-tmux-cli-orchestrator` custom agent plus `util-tmux-session-admin` and `util-delegated-cli-task-ops` for tmux-managed delegated coding sessions, alongside `keepass-entity-ops` for safe KeePass `.kdbx` operations and `agent-config-bridge` for safety-first Copilot/OpenCode configuration translation with explicit symlink and wrapper actions.
+
+`logseq-vault-skills` is a Logseq vault plugin for block-oriented markdown indexing. It provides a `logseq-vault-indexer` agent plus a SQLite-backed `logseq-vault-sqlite` skill for fast reads, explicit vault syncs, and file-level updates. Set `LOGSEQ_SQLITE_PATH` to control where the index database lives.

@@ -1,0 +1,18 @@
+{
+  "name": "logseq-vault-skills",
+  "description": "Logseq vault agents and skills for indexing markdown into SQLite and updating the local database.",
+  "version": "0.1.0",
+  "keywords": [
+    "logseq",
+    "markdown",
+    "sqlite",
+    "vault",
+    "index",
+    "agents",
+    "skills"
+  ],
+  "agents": "agents/",
+  "skills": [
+    "skills/"
+  ]
+}

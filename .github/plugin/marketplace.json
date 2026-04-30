@@ -4,8 +4,8 @@
     "name": "cmwen"
   },
   "metadata": {
-    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, life automation starters, plugin authoring starters, and utility skills for safe local-file operations.",
-    "version": "0.5.0"
+    "description": "Reusable workflow plugins for GitHub Copilot CLI, including trusted web news, software-team knowledge spaces, life automation starters, plugin authoring starters, utility skills for safe local-file operations, and Logseq vault indexing.",
+    "version": "0.6.0"
   },
   "plugins": [
     {
@@ -37,6 +37,12 @@
       "description": "Provides utility agents and skills for safe KeePass operations, Copilot/OpenCode config bridging, and tmux-managed delegated coding sessions.",
       "version": "0.3.0",
       "source": "plugins/util-skills"
+    },
+    {
+      "name": "logseq-vault-skills",
+      "description": "Provides Logseq vault agents and skills for indexing markdown into SQLite and synchronizing file updates.",
+      "version": "0.1.0",
+      "source": "plugins/logseq-vault-skills"
     }
   ]
 }
